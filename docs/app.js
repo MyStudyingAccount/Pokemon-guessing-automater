@@ -3,7 +3,7 @@
  *
  * OCR module hook: when an OCR module is added later it should call
  * `window.applyOcrFeedback(pokemonId, feedbackMap)` where feedbackMap is
- * { fieldKey: 'higher'|'lower'|'equal'|'match'|'no-match' }.
+ * { fieldKey: 'higher'|'close-higher'|'lower'|'close-lower'|'equal'|'match'|'no-match' }.
  */
 
 'use strict';
@@ -23,8 +23,17 @@ const NUMERIC_FIELDS = [
   { key: 'weight',     label: 'Weight (kg)' },
   { key: 'bst',        label: 'Base Stat Total' },
   { key: 'speed',      label: 'Speed' },
+  { key: 'gen',        label: 'Generation' },
   { key: 'egg_cycles', label: 'Hatch Cycles' },
 ];
+
+// Fields where a "close but not equal" (yellow) hint is shown, with their tolerance.
+// 'higher'/'lower' for these fields means outside the tolerance range.
+const CLOSE_TOLERANCES = {
+  bst:   50,
+  speed: 10,
+  gen:   1,
+};
 
 const CATEGORICAL_FIELDS = [
   { key: 'type1',           label: 'Type 1',       multi: false },
@@ -32,7 +41,6 @@ const CATEGORICAL_FIELDS = [
   { key: 'color',           label: 'Color',        multi: false },
   { key: 'body_shape',      label: 'Body Shape',   multi: false },
   { key: 'gender',          label: 'Gender Ratio', multi: false },
-  { key: 'gen',             label: 'Generation',   multi: false },
   { key: 'evolution_stage', label: 'Evo Stage',    multi: false },
   { key: 'egg_groups',      label: 'Egg Groups',   multi: true  },
   { key: 'abilities',       label: 'Abilities',    multi: true  },
@@ -146,8 +154,12 @@ function showFeedbackPanel(poke) {
     btnsDiv.className = 'fb-buttons';
 
     const isNumeric = NUMERIC_FIELDS.some(function(f) { return f.key === fd.key; });
+    const hasTol    = isNumeric && CLOSE_TOLERANCES[fd.key] !== undefined;
     const options   = isNumeric
-      ? [['higher','↑ Higher'],['equal','= Equal'],['lower','↓ Lower'],['unknown','? Unknown']]
+      ? (hasTol
+          ? [['higher','↑ Far'],['close-higher','↑ Close'],['equal','= Equal'],
+             ['close-lower','↓ Close'],['lower','↓ Far'],['unknown','? Unknown']]
+          : [['higher','↑ Higher'],['equal','= Equal'],['lower','↓ Lower'],['unknown','? Unknown']])
       : [['match','✓ Match'],['no-match','✗ No Match'],['unknown','? Unknown']];
 
     options.forEach(function(opt) {
@@ -183,7 +195,8 @@ function confirmFeedback() {
     const key       = row.dataset.key;
     const activeBtn = row.querySelector('.fb-btn.active-higher, .fb-btn.active-lower, ' +
                                         '.fb-btn.active-equal, .fb-btn.active-match, ' +
-                                        '.fb-btn.active-no-match');
+                                        '.fb-btn.active-no-match, .fb-btn.active-close-higher, ' +
+                                        '.fb-btn.active-close-lower');
     if (activeBtn) feedbackMap[key] = activeBtn.dataset.fb;
   });
 
@@ -225,9 +238,29 @@ function matchesConstraint(candidate, guessedPoke, feedbackMap) {
     const candVal  = candidate[key];
 
     if (fb === 'higher') {
-      if (candVal === null || candVal <= guessVal) return false;
+      const tol = CLOSE_TOLERANCES[key];
+      if (tol !== undefined) {
+        // Far higher: candidate must be more than tolerance above guessed value
+        if (candVal === null || candVal <= guessVal + tol) return false;
+      } else {
+        if (candVal === null || candVal <= guessVal) return false;
+      }
     } else if (fb === 'lower') {
-      if (candVal === null || candVal >= guessVal) return false;
+      const tol = CLOSE_TOLERANCES[key];
+      if (tol !== undefined) {
+        // Far lower: candidate must be more than tolerance below guessed value
+        if (candVal === null || candVal >= guessVal - tol) return false;
+      } else {
+        if (candVal === null || candVal >= guessVal) return false;
+      }
+    } else if (fb === 'close-higher') {
+      const tol = CLOSE_TOLERANCES[key] || 0;
+      // Within (guessVal, guessVal + tol]
+      if (candVal === null || candVal <= guessVal || candVal > guessVal + tol) return false;
+    } else if (fb === 'close-lower') {
+      const tol = CLOSE_TOLERANCES[key] || 0;
+      // Within [guessVal - tol, guessVal)
+      if (candVal === null || candVal >= guessVal || candVal < guessVal - tol) return false;
     } else if (fb === 'equal') {
       if (candVal !== guessVal) return false;
     } else if (fb === 'match') {
@@ -328,12 +361,14 @@ function displayName(p) {
 
 function fbLabel(fb) {
   switch (fb) {
-    case 'higher':   return '↑ Higher';
-    case 'lower':    return '↓ Lower';
-    case 'equal':    return '= Equal';
-    case 'match':    return '✓ Match';
-    case 'no-match': return '✗ No Match';
-    default:         return '?';
+    case 'higher':       return '↑ Higher';
+    case 'close-higher': return '↑ Close Higher';
+    case 'lower':        return '↓ Lower';
+    case 'close-lower':  return '↓ Close Lower';
+    case 'equal':        return '= Equal';
+    case 'match':        return '✓ Match';
+    case 'no-match':     return '✗ No Match';
+    default:             return '?';
   }
 }
 
