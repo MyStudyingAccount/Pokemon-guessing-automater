@@ -1,0 +1,222 @@
+/* ─── Reset / Base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0f0f1a;
+  --surface:   #1a1a2e;
+  --surface2:  #16213e;
+  --border:    #2a2a4a;
+  --accent:    #e94560;
+  --accent2:   #0f3460;
+  --text:      #e0e0e0;
+  --text-dim:  #888;
+  --green:     #4caf50;
+  --red:       #f44336;
+  --yellow:    #ff9800;
+  --blue:      #2196f3;
+  --radius:    10px;
+  --font:      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html { font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 0 0 2rem;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────── */
+header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--accent);
+  padding: 1rem;
+  text-align: center;
+}
+header h1 { font-size: 1.4rem; color: var(--accent); }
+.subtitle  { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+/* ─── Layout ─────────────────────────────────────────────────────────── */
+main { max-width: 640px; margin: 0 auto; padding: 0.75rem; }
+
+/* ─── Cards ──────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+h2 { font-size: 1rem; margin-bottom: 0.6rem; color: var(--text); }
+
+/* ─── Input row ──────────────────────────────────────────────────────── */
+.input-row { display: flex; gap: 0.5rem; }
+.input-row input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.8rem;
+}
+.input-row input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+.error-msg { color: var(--red); font-size: 0.85rem; margin-top: 0.4rem; }
+
+/* ─── Checkboxes ─────────────────────────────────────────────────────── */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+.checkbox-label:last-child { margin-bottom: 0; }
+.checkbox-label input[type="checkbox"] { accent-color: var(--accent); width: 1rem; height: 1rem; }
+
+/* ─── Buttons ────────────────────────────────────────────────────────── */
+button {
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+button:active { opacity: 0.75; }
+
+.btn-primary   { background: var(--accent);  color: #fff;          padding: 0.6rem 1.1rem; font-size: 0.9rem; }
+.btn-secondary { background: var(--surface2); color: var(--text);   padding: 0.6rem 1rem;   font-size: 0.85rem; border: 1px solid var(--border); }
+.btn-danger    { background: #7b1f1f;         color: #faa;          padding: 0.55rem 1rem;  font-size: 0.85rem; }
+.btn-sm        { padding: 0.35rem 0.7rem; font-size: 0.8rem; }
+
+.btn-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+
+/* ─── Constraints list ───────────────────────────────────────────────── */
+#constraints-section { margin-bottom: 0.75rem; }
+#constraints-section h2 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-dim); }
+
+.constraint-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+}
+.constraint-card .c-title {
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+.constraint-table { width: 100%; border-collapse: collapse; }
+.constraint-table td { padding: 0.15rem 0.3rem; vertical-align: top; }
+.constraint-table .label { color: var(--text-dim); width: 40%; }
+.constraint-table .value { font-weight: 500; }
+.fb-higher { color: var(--yellow); }
+.fb-lower  { color: var(--blue);   }
+.fb-equal  { color: var(--green);  }
+.fb-match  { color: var(--green);  }
+.fb-no-match { color: var(--red);  }
+
+#reset-btn { margin-top: 0.5rem; }
+
+/* ─── Feedback panel ─────────────────────────────────────────────────── */
+#feedback-pokemon-name { color: var(--accent); }
+.hint { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.6rem; }
+
+.fb-field {
+  margin-bottom: 0.7rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.fb-field:last-child { border-bottom: none; margin-bottom: 0; }
+
+.fb-field-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+.fb-field-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.fb-buttons { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+.fb-btn {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.fb-btn.active-higher  { background: #7a5500; color: var(--yellow); border-color: var(--yellow); }
+.fb-btn.active-lower   { background: #003770; color: var(--blue);   border-color: var(--blue);   }
+.fb-btn.active-equal   { background: #1b4d1e; color: var(--green);  border-color: var(--green);  }
+.fb-btn.active-match   { background: #1b4d1e; color: var(--green);  border-color: var(--green);  }
+.fb-btn.active-no-match { background: #5a1515; color: #ff8080;      border-color: var(--red);    }
+.fb-btn.active-unknown { background: #333;    color: #ccc;          border-color: #666;          }
+
+/* ─── Results ────────────────────────────────────────────────────────── */
+.results-header { display: flex; align-items: center; justify-content: space-between; }
+.results-header h2 { margin-bottom: 0; }
+#candidate-count { color: var(--accent); }
+
+.candidate-list {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.candidate-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+.candidate-chip .dex { color: var(--text-dim); font-size: 0.7rem; }
+
+/* ─── Type badges ────────────────────────────────────────────────────── */
+.type-badge {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.t-normal   { background:#9a9a6a; color:#fff; }
+.t-fire     { background:#e86c30; color:#fff; }
+.t-water    { background:#6890f0; color:#fff; }
+.t-electric { background:#f8d030; color:#333; }
+.t-grass    { background:#78c850; color:#fff; }
+.t-ice      { background:#98d8d8; color:#333; }
+.t-fighting { background:#c03028; color:#fff; }
+.t-poison   { background:#a040a0; color:#fff; }
+.t-ground   { background:#e0c068; color:#333; }
+.t-flying   { background:#a890f0; color:#fff; }
+.t-psychic  { background:#f85888; color:#fff; }
+.t-bug      { background:#a8b820; color:#fff; }
+.t-rock     { background:#b8a038; color:#fff; }
+.t-ghost    { background:#705898; color:#fff; }
+.t-dragon   { background:#7038f8; color:#fff; }
+.t-dark     { background:#705848; color:#fff; }
+.t-steel    { background:#b8b8d0; color:#333; }
+.t-fairy    { background:#ee99ac; color:#333; }

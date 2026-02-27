@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>Pokémon Guess Helper</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎮 Pokémon Guess Helper</h1>
+    <p class="subtitle">Narrow down candidates from game feedback</p>
+  </header>
+
+  <main>
+    <!-- Guess input section -->
+    <section class="card" id="guess-section">
+      <h2>Enter your guess</h2>
+      <div class="input-row">
+        <input type="text" id="guess-input"
+               placeholder="Name or Pokédex # (e.g. Bulbasaur or 1)"
+               autocomplete="off" autocorrect="off" autocapitalize="off"
+               spellcheck="false">
+        <button id="apply-btn" class="btn-primary">Apply</button>
+      </div>
+      <div id="guess-error" class="error-msg" hidden></div>
+    </section>
+
+    <!-- Options -->
+    <section class="card" id="options-section">
+      <label class="checkbox-label">
+        <input type="checkbox" id="exclude-guessed">
+        Exclude already-guessed Pokémon from candidates
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="base-only">
+        Base forms only (no megas, regionals, etc.)
+      </label>
+    </section>
+
+    <!-- Active constraints list -->
+    <section id="constraints-section" hidden>
+      <h2>Feedback entered</h2>
+      <div id="constraints-list"></div>
+      <button id="reset-btn" class="btn-danger">↺ Reset all</button>
+    </section>
+
+    <!-- Constraint entry for current guess -->
+    <section class="card" id="feedback-section" hidden>
+      <h2>Set feedback for: <span id="feedback-pokemon-name"></span></h2>
+      <p class="hint">Select the feedback the game gave for each field.</p>
+      <div id="feedback-fields"></div>
+      <div class="btn-row">
+        <button id="confirm-btn" class="btn-primary">✔ Confirm feedback</button>
+        <button id="cancel-btn" class="btn-secondary">Cancel</button>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="card" id="results-section">
+      <div class="results-header">
+        <h2>Candidates: <span id="candidate-count">—</span></h2>
+        <button id="toggle-list-btn" class="btn-secondary btn-sm">Show list ▼</button>
+      </div>
+      <div id="candidate-list" class="candidate-list" hidden></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
