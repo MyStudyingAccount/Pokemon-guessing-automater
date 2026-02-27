@@ -1,0 +1,12 @@
+{
+  "name": "pokemon-preprocess",
+  "version": "1.0.0",
+  "description": "Preprocessing script for Pokémon guessing automater",
+  "scripts": {
+    "build": "node preprocess.js",
+    "validate": "node validate.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
