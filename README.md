@@ -14,7 +14,8 @@ Once deployed to GitHub Pages the app is available at:
 1. Open the app on your phone or desktop.
 2. **Enter your guess** – type a Pokémon name (e.g. `Charizard`) or its national Pokédex number (e.g. `6`) and press **Apply**.
 3. **Set feedback** – for every field the game revealed, choose the result:
-   - Numeric fields *(height, weight, BST, speed, hatch cycles)*: **↑ Higher** / **= Equal** / **↓ Lower**
+   - Numeric fields *(height, weight, BST, speed, hatch cycles)*: **↑ Higher** / **≈↑ Close↑** / **= Equal** / **≈↓ Close↓** / **↓ Lower**
+     - *Close* means the true value is within **10 %** of the guessed value in that direction
    - Categorical fields *(types, abilities, egg groups, etc.)*: **✓ Match** / **✗ No Match**
    - Leave fields as **? Unknown** if the game gave no information.
 4. Press **Confirm feedback** – the candidate list updates instantly.
@@ -109,7 +110,7 @@ window.applyOcrFeedback('bulbasaur', {
 });
 ```
 
-Valid feedback values: `'higher'`, `'lower'`, `'equal'`, `'match'`, `'no-match'`.
+Valid feedback values: `'higher'`, `'close-higher'`, `'equal'`, `'close-lower'`, `'lower'`, `'match'`, `'no-match'`.
 
 ---
 
