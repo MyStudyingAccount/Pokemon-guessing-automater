@@ -118,11 +118,13 @@ button:active { opacity: 0.75; }
 .constraint-table td { padding: 0.15rem 0.3rem; vertical-align: top; }
 .constraint-table .label { color: var(--text-dim); width: 40%; }
 .constraint-table .value { font-weight: 500; }
-.fb-higher { color: var(--yellow); }
-.fb-lower  { color: var(--blue);   }
-.fb-equal  { color: var(--green);  }
-.fb-match  { color: var(--green);  }
-.fb-no-match { color: var(--red);  }
+.fb-higher       { color: var(--yellow); }
+.fb-close-higher { color: #ffc060;       }
+.fb-lower        { color: var(--blue);   }
+.fb-close-lower  { color: #60d0ff;       }
+.fb-equal        { color: var(--green);  }
+.fb-match        { color: var(--green);  }
+.fb-no-match     { color: var(--red);    }
 
 #reset-btn { margin-top: 0.5rem; }
 
@@ -160,12 +162,14 @@ button:active { opacity: 0.75; }
   cursor: pointer;
   transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
-.fb-btn.active-higher  { background: #7a5500; color: var(--yellow); border-color: var(--yellow); }
-.fb-btn.active-lower   { background: #003770; color: var(--blue);   border-color: var(--blue);   }
-.fb-btn.active-equal   { background: #1b4d1e; color: var(--green);  border-color: var(--green);  }
-.fb-btn.active-match   { background: #1b4d1e; color: var(--green);  border-color: var(--green);  }
-.fb-btn.active-no-match { background: #5a1515; color: #ff8080;      border-color: var(--red);    }
-.fb-btn.active-unknown { background: #333;    color: #ccc;          border-color: #666;          }
+.fb-btn.active-higher       { background: #7a5500; color: var(--yellow); border-color: var(--yellow); }
+.fb-btn.active-close-higher { background: #6a4000; color: #ffc060;       border-color: #ffc060;       }
+.fb-btn.active-lower        { background: #003770; color: var(--blue);   border-color: var(--blue);   }
+.fb-btn.active-close-lower  { background: #004455; color: #60d0ff;       border-color: #60d0ff;       }
+.fb-btn.active-equal        { background: #1b4d1e; color: var(--green);  border-color: var(--green);  }
+.fb-btn.active-match        { background: #1b4d1e; color: var(--green);  border-color: var(--green);  }
+.fb-btn.active-no-match     { background: #5a1515; color: #ff8080;       border-color: var(--red);    }
+.fb-btn.active-unknown      { background: #333;    color: #ccc;          border-color: #666;          }
 
 /* ─── Results ────────────────────────────────────────────────────────── */
 .results-header { display: flex; align-items: center; justify-content: space-between; }

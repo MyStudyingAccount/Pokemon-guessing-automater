@@ -3,10 +3,22 @@
  *
  * OCR module hook: when an OCR module is added later it should call
  * `window.applyOcrFeedback(pokemonId, feedbackMap)` where feedbackMap is
- * { fieldKey: 'higher'|'lower'|'equal'|'match'|'no-match' }.
+ * { fieldKey: 'higher'|'close-higher'|'equal'|'close-lower'|'lower'|'match'|'no-match' }.
+ *
+ * For numeric fields, 'close-higher' / 'close-lower' mean the true answer is
+ * within CLOSE_THRESHOLD (10 %) of the guessed value but in that direction.
  */
 
 'use strict';
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+
+/**
+ * Numeric values within this fraction of the guessed value are considered
+ * "close" rather than "higher" / "lower".  10 % matches most published
+ * Pokémon guessing games.
+ */
+const CLOSE_THRESHOLD = 0.10;
 
 // ── State ────────────────────────────────────────────────────────────────────
 
@@ -147,7 +159,7 @@ function showFeedbackPanel(poke) {
 
     const isNumeric = NUMERIC_FIELDS.some(function(f) { return f.key === fd.key; });
     const options   = isNumeric
-      ? [['higher','↑ Higher'],['equal','= Equal'],['lower','↓ Lower'],['unknown','? Unknown']]
+      ? [['higher','↑ Higher'],['close-higher','≈↑ Close↑'],['equal','= Equal'],['close-lower','≈↓ Close↓'],['lower','↓ Lower'],['unknown','? Unknown']]
       : [['match','✓ Match'],['no-match','✗ No Match'],['unknown','? Unknown']];
 
     options.forEach(function(opt) {
@@ -181,7 +193,8 @@ function confirmFeedback() {
   const feedbackMap = {};
   document.querySelectorAll('#feedback-fields .fb-field').forEach(function(row) {
     const key       = row.dataset.key;
-    const activeBtn = row.querySelector('.fb-btn.active-higher, .fb-btn.active-lower, ' +
+    const activeBtn = row.querySelector('.fb-btn.active-higher, .fb-btn.active-close-higher, ' +
+                                        '.fb-btn.active-lower, .fb-btn.active-close-lower, ' +
                                         '.fb-btn.active-equal, .fb-btn.active-match, ' +
                                         '.fb-btn.active-no-match');
     if (activeBtn) feedbackMap[key] = activeBtn.dataset.fb;
@@ -225,9 +238,21 @@ function matchesConstraint(candidate, guessedPoke, feedbackMap) {
     const candVal  = candidate[key];
 
     if (fb === 'higher') {
+      // Candidate must be strictly higher AND outside the close range
       if (candVal === null || candVal <= guessVal) return false;
+      if (guessVal !== 0 && Math.abs(candVal - guessVal) / Math.abs(guessVal) <= CLOSE_THRESHOLD) return false;
+    } else if (fb === 'close-higher') {
+      // Candidate must be higher but within the close range
+      if (candVal === null || candVal <= guessVal) return false;
+      if (guessVal === 0 || Math.abs(candVal - guessVal) / Math.abs(guessVal) > CLOSE_THRESHOLD) return false;
     } else if (fb === 'lower') {
+      // Candidate must be strictly lower AND outside the close range
       if (candVal === null || candVal >= guessVal) return false;
+      if (guessVal !== 0 && Math.abs(candVal - guessVal) / Math.abs(guessVal) <= CLOSE_THRESHOLD) return false;
+    } else if (fb === 'close-lower') {
+      // Candidate must be lower but within the close range
+      if (candVal === null || candVal >= guessVal) return false;
+      if (guessVal === 0 || Math.abs(candVal - guessVal) / Math.abs(guessVal) > CLOSE_THRESHOLD) return false;
     } else if (fb === 'equal') {
       if (candVal !== guessVal) return false;
     } else if (fb === 'match') {
@@ -328,12 +353,14 @@ function displayName(p) {
 
 function fbLabel(fb) {
   switch (fb) {
-    case 'higher':   return '↑ Higher';
-    case 'lower':    return '↓ Lower';
-    case 'equal':    return '= Equal';
-    case 'match':    return '✓ Match';
-    case 'no-match': return '✗ No Match';
-    default:         return '?';
+    case 'higher':       return '↑ Higher';
+    case 'close-higher': return '≈↑ Close↑';
+    case 'lower':        return '↓ Lower';
+    case 'close-lower':  return '≈↓ Close↓';
+    case 'equal':        return '= Equal';
+    case 'match':        return '✓ Match';
+    case 'no-match':     return '✗ No Match';
+    default:             return '?';
   }
 }
 
